@@ -21,7 +21,12 @@ const fileFilter = (req, file, cb) => {
     cb(null, false);
   }
 };
+const { Canvas, Image, ImageData } = canvas;
+faceapi.env.monkeyPatch({ Canvas, Image, ImageData });
 
+const faceDetectionOptions = new faceapi.SsdMobilenetv1Options({
+  minConfidence: 0.5,
+});
 
 const getAllCriminals = () => {
   return Criminal.find({});
