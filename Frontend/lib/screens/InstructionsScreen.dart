@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:sleuth/components/sleuth_text.dart';
 
 class InstructionsScreen extends StatefulWidget {
@@ -10,10 +9,25 @@ class InstructionsScreen extends StatefulWidget {
 }
 
 class _InstructionsScreenState extends State<InstructionsScreen> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+        items: 
+        const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.gps_fixed),
+            label: "Location",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: "Scan",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.call),
+            label: "SOS",
+          ),
+        ],),
       floatingActionButton: SizedBox(
         width: MediaQuery.of(context).size.width * 0.8,
         height: 85,
@@ -23,8 +37,7 @@ class _InstructionsScreenState extends State<InstructionsScreen> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(30),
             ),
-            onPressed: () {
-            },
+            onPressed: () {},
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: const [
@@ -45,7 +58,7 @@ class _InstructionsScreenState extends State<InstructionsScreen> {
                   ),
                 )
               ],
-          )),
+            )),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: Container(
