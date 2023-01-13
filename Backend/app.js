@@ -8,6 +8,8 @@ const app = express();
 app.use(express.json({}));
 app.use(cors());
 
+const Criminal = require("./models/criminal");
+
 app.get("/", (req, res) => {
     return res.status(200).json({
         message: "Server is up and running",
@@ -24,6 +26,7 @@ app.listen(port, async () => {
             useUnifiedTopology: true,
         })
         .then(() => {
+            Criminal.init();
             console.log("Database Connected");
         })
         .catch((err) => {
