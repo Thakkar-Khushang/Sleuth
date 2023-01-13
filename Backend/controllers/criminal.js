@@ -1,3 +1,26 @@
+
+const AWS = require("aws-sdk");
+
+var s3 = new AWS.S3({
+  accessKeyId: process.env.AWS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_KEY,
+  signatureVersion: "v4",
+  region: "ap-south-1",
+});
+
+const fileFilter = (req, file, cb) => {
+  if (
+    file.mimetype === "image/jpg" ||
+    file.mimetype === "image/jpeg" ||
+    file.mimetype === "image/png"
+  ) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+
+
 const getAllCriminals = () => {
   return Criminal.find({});
 };
