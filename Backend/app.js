@@ -15,6 +15,7 @@ app.get("/", (req, res) => {
         message: "Server is up and running",
     });
 });
+app.use("/",require("./routes/criminal.js"));
 
 const port = process.env.PORT || 3000;
 
