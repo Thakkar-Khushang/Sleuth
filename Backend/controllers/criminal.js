@@ -21,6 +21,24 @@ const fileFilter = (req, file, cb) => {
     cb(null, false);
   }
 };
+
+var uploadS3 = multer({
+  storage: multerS3({
+    s3,
+    bucket: "khushang-bucket/crime-app",
+    metadata: function (req, file, cb) {
+      cb(null, { fieldName: file.fieldname });
+    },
+    key: function (req, file, cb) {
+      cb(null, Date.now().toString() + "." + file.mimetype.split("/")[1]);
+    },
+  }),
+  limits: {
+    fileSize: 1024 * 1024 * 5,
+  },
+  fileFilter: fileFilter,
+});
+
 const { Canvas, Image, ImageData } = canvas;
 faceapi.env.monkeyPatch({ Canvas, Image, ImageData });
 
