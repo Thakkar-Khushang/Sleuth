@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sleuth/components/sleuth_text.dart';
+import 'package:sleuth/screens/PictureConfirmationScreen.dart';
 
 class InstructionsScreen extends StatefulWidget {
   const InstructionsScreen({Key? key}) : super(key: key);
@@ -12,55 +14,58 @@ class _InstructionsScreenState extends State<InstructionsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        items: 
-        const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.gps_fixed),
-            label: "Location",
+      extendBody: true,
+      bottomNavigationBar: Container(
+          height: 80,
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(30), topLeft: Radius.circular(30)),
+            boxShadow: [
+              BoxShadow(color: Colors.black38, spreadRadius: 0, blurRadius: 10),
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: "Scan",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.call),
-            label: "SOS",
-          ),
-        ],),
-      floatingActionButton: SizedBox(
-        width: MediaQuery.of(context).size.width * 0.8,
-        height: 85,
-        child: FloatingActionButton(
-            isExtended: true,
-            backgroundColor: Colors.lightBlueAccent[200],
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
+          child: ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(30.0),
+              topRight: Radius.circular(30.0),
             ),
-            onPressed: () {},
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Icon(
-                  Icons.document_scanner_outlined,
-                  color: Colors.black87,
-                  size: 33,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 5.0),
-                  child: Text(
-                    "Scan",
-                    style: TextStyle(
-                      color: Colors.black87,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400,
+            child: BottomNavigationBar(
+              backgroundColor: Colors.lightBlueAccent[200],
+              selectedItemColor: Colors.black,
+              unselectedItemColor: Colors.black,
+              onTap: (value) {
+                if (value == 0) {
+                  // Navigator.pushNamed(context, "/location");
+                } else if (value == 1) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const PictureConfirmationScreen(),
                     ),
+                  );
+                } else if (value == 2) {
+                  // Navigator.pushNamed(context, "/sos");
+                }
+              },
+              items: [
+                const BottomNavigationBarItem(
+                  icon: Icon(Icons.gps_fixed),
+                  label: "Location",
+                ),
+                BottomNavigationBarItem(
+                  icon: SvgPicture.asset(
+                    "assets/scan.svg",
+                    width: 25,
                   ),
-                )
+                  label: "Scan",
+                ),
+                const BottomNavigationBarItem(
+                  icon: Icon(Icons.call),
+                  label: "SOS",
+                ),
               ],
-            )),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+            ),
+          )),
       body: Container(
         width: MediaQuery.of(context).size.width,
         color: Colors.grey[900],
