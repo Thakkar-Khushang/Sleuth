@@ -1,7 +1,10 @@
 const faceapi = require("@vladmandic/face-api");
 const canvas = require("canvas");
-
+const multer = require("multer");
+const multerS3 = require("multer-s3");
 const AWS = require("aws-sdk");
+const axios = require("axios");
+const Criminal = require("../models/criminal");
 
 var s3 = new AWS.S3({
   accessKeyId: process.env.AWS_KEY_ID,
@@ -25,7 +28,7 @@ const fileFilter = (req, file, cb) => {
 var uploadS3 = multer({
   storage: multerS3({
     s3,
-    bucket: "khushang-bucket/crime-app",
+    bucket: "khushang-bucket",
     metadata: function (req, file, cb) {
       cb(null, { fieldName: file.fieldname });
     },
@@ -38,6 +41,7 @@ var uploadS3 = multer({
   },
   fileFilter: fileFilter,
 });
+
 
 const { Canvas, Image, ImageData } = canvas;
 faceapi.env.monkeyPatch({ Canvas, Image, ImageData });
@@ -138,12 +142,14 @@ const getDangerLevel = (crimes) => {
         const faceMatcher = new faceapi.FaceMatcher(results);
   
         const criminals = await getAllCriminals();
+
+        console.log(criminals);
   
         let flag = true;
         for (let i = 0; i < criminals.length; i++) {
           const key = criminals[i].imageKey;
           var url = s3.getSignedUrl("getObject", {
-            Bucket: "khushang-bucket/crime-app",
+            Bucket: "khushang-bucket",
             Key: key,
           });
           const response = await axios.get(url, {

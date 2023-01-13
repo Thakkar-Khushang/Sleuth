@@ -1,4 +1,5 @@
 require("@tensorflow/tfjs-node");
+const faceapi = require("@vladmandic/face-api");
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
