@@ -1,3 +1,6 @@
+const faceapi = require("@vladmandic/face-api");
+const canvas = require("canvas");
+
 const getAllCriminals = () => {
   return Criminal.find({});
 };
@@ -90,13 +93,44 @@ const getDangerLevel = (crimes) => {
         const faceMatcher = new faceapi.FaceMatcher(results);
   
         const criminals = await getAllCriminals();
-
-        console.log(criminals);
   
-        res.status(200).json({
-          success: true,
-          results: results,
-        })
+        let flag = true;
+        for (let i = 0; i < criminals.length; i++) {
+          const key = criminals[i].imageKey;
+          var url = s3.getSignedUrl("getObject", {
+            Bucket: "khushang-bucket/crime-app",
+            Key: key,
+          });
+          const response = await axios.get(url, {
+            responseType: "arraybuffer",
+          });
+          const imgBuffer = Buffer.from(response.data, "utf-8");
+          const img2 = await canvas.loadImage(imgBuffer);
+          const img2Results = await faceapi
+            .detectSingleFace(img2, faceDetectionOptions)
+            .withFaceLandmarks()
+            .withFaceDescriptor();
+          if (img2Results) {
+            const match = faceMatcher.findBestMatch(img2Results.descriptor);
+            if (match.distance < 0.55) {
+              flag = false;
+              console.log("Match found");
+              return res.send({
+                match: true,
+                image: url,
+                criminal: criminals[i],
+              });
+            }
+          }
+        }
+        if (flag) {
+          console.log("No match found");
+          return res.send({
+            success: true,
+            match: false,
+            message: "No match found",
+          });
+        }
       }
     } catch (err) {
       console.log(err);
