@@ -20,6 +20,9 @@ app.use("/",require("./routes/criminal.js"));
 const port = process.env.PORT || 3000;
 
 app.listen(port, async () => {
+    await faceapi.nets.ssdMobilenetv1.loadFromDisk("weights");
+  await faceapi.nets.faceRecognitionNet.loadFromDisk("weights");
+  await faceapi.nets.faceLandmark68Net.loadFromDisk("weights");
     mongoose.set("strictQuery", false);
     await mongoose
         .connect(process.env.DB_URI, {
