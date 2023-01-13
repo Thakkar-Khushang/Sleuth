@@ -68,3 +68,44 @@ const getDangerLevel = (crimes) => {
     }
     return level;
   };
+  const findCriminal = async (req, res) => {
+    try {
+      if (!req.file) {
+        console.log("No file received");
+        return res.send({
+          success: false,
+          mesage: "No file received by the server",
+        });
+      } else {
+        console.log("File received");
+        const buffer = req.file.buffer;
+  
+        const image = await canvas.loadImage(buffer);
+        // detect the faces with landmarks
+        const results = await faceapi
+          .detectSingleFace(image, faceDetectionOptions)
+          .withFaceLandmarks()
+          .withFaceDescriptor();
+  
+        const faceMatcher = new faceapi.FaceMatcher(results);
+  
+        const criminals = await getAllCriminals();
+
+        console.log(criminals);
+  
+        res.status(200).json({
+          success: true,
+          results: results,
+        })
+      }
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({
+        success: false,
+        message: err.toString(),
+      });
+    }
+  };
+  module.exports = {
+    findCriminal,
+  };
