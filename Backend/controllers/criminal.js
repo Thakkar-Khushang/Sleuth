@@ -1,3 +1,8 @@
+const getAllCriminals = () => {
+  return Criminal.find({});
+};
+
+
 const getDangerLevel = (crimes) => {
     let level = 0;
     let lowLevelCrimes = 0;
