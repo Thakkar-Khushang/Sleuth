@@ -120,6 +120,7 @@ const getDangerLevel = (crimes) => {
     }
     return level;
   };
+
   const findCriminal = async (req, res) => {
     try {
       if (!req.file) {
@@ -191,6 +192,53 @@ const getDangerLevel = (crimes) => {
       });
     }
   };
+
+  const uploadCriminal = async (req, res) => {
+    const { name, dob, address, crimes } = req.body;
+    if (!name || !dob || !address || !crimes) {
+      return res.status(400).json({
+        message: "Please provide all the details",
+      });
+    }
+    console.log(1);
+    const dangerLevel = getDangerLevel(crimes);
+    try {
+      console.log(11);
+      const uploadSingle = uploadS3.single("file");
+      uploadSingle(req, res, async (err) => {
+        if (err) {
+          console.log(err);
+          return res.send({
+            success: false,
+            err: err
+          });
+        } else {
+          console.log("Image uploaded successfully");
+          console.log(req.file);
+          const criminal = new Criminal({
+            name,
+            dob,
+            address,
+            crimes,
+            dangerLevel,
+            imageKey: req.file.key,
+          });
+          await criminal.save();
+          return res.send({
+            message: "Criminal Added",
+            criminal,
+          });
+        }
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({
+        message: err.toString(),
+      });
+    }
+  };
+
   module.exports = {
     findCriminal,
+    uploadCriminal
   };
