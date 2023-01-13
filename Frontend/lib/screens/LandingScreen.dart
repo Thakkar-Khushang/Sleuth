@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sleuth/components/sleuth_text.dart';
+import 'package:sleuth/screens/InstructionsScreen.dart';
 
 class LandingScreen extends StatelessWidget {
   const LandingScreen({Key? key}) : super(key: key);
@@ -25,7 +26,14 @@ class LandingScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 80.0),
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const InstructionsScreen(),
+                      ),
+                    );
+                  },
                   style: ButtonStyle(
                     shape: MaterialStateProperty.all(RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
