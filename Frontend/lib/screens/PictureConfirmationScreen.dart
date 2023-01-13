@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sleuth/components/loader.dart';
+import 'package:sleuth/screens/MatchResultsScreen.dart';
 
 class PictureConfirmationScreen extends StatefulWidget {
   const PictureConfirmationScreen({
@@ -28,7 +29,14 @@ class _PictureConfirmationScreenState extends State<PictureConfirmationScreen> {
                     borderRadius: BorderRadius.circular(30),
                   ),
                   backgroundColor: Colors.lightBlueAccent[200],
-                  onPressed: () async {},
+                  onPressed: () async {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MatchResultsScreen(),
+                      ),
+                    );
+                  },
                   child: const Padding(
                     padding: EdgeInsets.only(top: 5.0),
                     child: Text(
@@ -63,12 +71,20 @@ class _PictureConfirmationScreenState extends State<PictureConfirmationScreen> {
                   Padding(
                     padding: EdgeInsets.only(
                         top: MediaQuery.of(context).size.height * 0.1),
-                    child: Container(
+                    child: SizedBox(
                       width: MediaQuery.of(context).size.width * 0.75,
-                      height: MediaQuery.of(context).size.height * 0.5,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[900],
+                      // height: MediaQuery.of(context).size.height * 0.5,
+                      // decoration: BoxDecoration(
+                      //   color: Colors.grey[900],
+                      //   borderRadius: BorderRadius.circular(20),
+                      // ),
+                      child: ClipRRect(
                         borderRadius: BorderRadius.circular(20),
+                        child: Image.asset(
+                          'assets/myPhoto.jpg',
+                          fit: BoxFit.cover,
+                          height: MediaQuery.of(context).size.height * 0.5,
+                        ),
                       ),
                     ),
                   ),
