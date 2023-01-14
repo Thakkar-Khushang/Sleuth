@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sleuth/components/sleuth_text.dart';
 import 'package:sleuth/screens/PictureConfirmationScreen.dart';
@@ -33,7 +35,7 @@ class _InstructionsScreenState extends State<InstructionsScreen> {
               backgroundColor: Colors.lightBlueAccent[200],
               selectedItemColor: Colors.black,
               unselectedItemColor: Colors.black,
-              onTap: (value) {
+              onTap: (value) async {
                 if (value == 0) {
                   // Navigator.pushNamed(context, "/location");
                 } else if (value == 1) {
@@ -44,7 +46,11 @@ class _InstructionsScreenState extends State<InstructionsScreen> {
                     ),
                   );
                 } else if (value == 2) {
-                  // Navigator.pushNamed(context, "/sos");
+                  const storage = FlutterSecureStorage();
+                  String? number = await storage.read(key: "phone_number");
+                  bool? res = await FlutterPhoneDirectCaller.callNumber(
+                      number ?? "100");
+                  print(res);
                 }
               },
               items: [

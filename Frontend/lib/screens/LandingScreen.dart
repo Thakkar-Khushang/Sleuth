@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:sleuth/components/phone_number_dialog.dart';
 import 'package:sleuth/components/sleuth_text.dart';
 import 'package:sleuth/screens/InstructionsScreen.dart';
 
@@ -26,13 +28,22 @@ class LandingScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 80.0),
                 child: TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const InstructionsScreen(),
-                      ),
-                    );
+                  onPressed: () async {
+                    const storage = FlutterSecureStorage();
+                    String? value = await storage.read(key: "phone_number");
+                    if (value == null) {
+                      showDialog(
+                        context: context,
+                        builder: (context) => const PhoneNumberDialog(),
+                      );
+                    } else {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const InstructionsScreen(),
+                        ),
+                      );
+                    }
                   },
                   style: ButtonStyle(
                     shape: MaterialStateProperty.all(RoundedRectangleBorder(
