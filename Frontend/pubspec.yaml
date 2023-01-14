@@ -41,7 +41,7 @@ dependencies:
   flutter_secure_storage: ^7.0.1
   flutter_phone_direct_caller: ^2.1.1
   intl_phone_number_input: ^0.7.2
-  http: ^0.13.5
+  http: ^0.13.3
   image_picker: ^0.8.4+1
 
 dev_dependencies:

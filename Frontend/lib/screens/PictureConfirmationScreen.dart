@@ -1,13 +1,16 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:sleuth/components/loader.dart';
 import 'package:sleuth/screens/MatchResultsScreen.dart';
+import 'package:sleuth/utils/https.utils.dart';
 
 class PictureConfirmationScreen extends StatefulWidget {
-  const PictureConfirmationScreen({
-    Key? key, required this.imagePath
-  }) : super(key: key);
+  const PictureConfirmationScreen({Key? key, required this.imagePath})
+      : super(key: key);
   final String imagePath;
-  
+
   @override
   State<PictureConfirmationScreen> createState() =>
       _PictureConfirmationScreenState();
@@ -31,12 +34,47 @@ class _PictureConfirmationScreenState extends State<PictureConfirmationScreen> {
                   ),
                   backgroundColor: Colors.lightBlueAccent[200],
                   onPressed: () async {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const MatchResultsScreen(),
-                      ),
-                    );
+                    try {
+                      setState(() {
+                        loading = true;
+                      });
+                      File image = File(widget.imagePath);
+                      final resp = jsonDecode(await asyncFileUpload(image));
+                      if (resp['match'] == true) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MatchResultsScreen(
+                                match: resp['match'],
+                                image: resp['image'],
+                                criminal: resp['criminal'],
+                                uploaded: widget.imagePath),
+                          ),
+                        );
+                      } else if (resp['success'] == false) {
+                        print(resp['message']);
+                      } else if (resp['match'] == false) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MatchResultsScreen(
+                              match: false,
+                            ),
+                          ),
+                        );
+                      }
+                    } catch (e) {
+                      print(e);
+                    }
+                    setState(() {
+                      loading = false;
+                    });
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => const MatchResultsScreen(),
+                    //   ),
+                    // );
                   },
                   child: const Padding(
                     padding: EdgeInsets.only(top: 5.0),
@@ -81,8 +119,10 @@ class _PictureConfirmationScreenState extends State<PictureConfirmationScreen> {
                       // ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(20),
-                        child: Image.asset(
-                          'assets/myPhoto.jpg',
+                        child: Image.file(
+                          File(
+                            widget.imagePath,
+                          ),
                           fit: BoxFit.cover,
                           height: MediaQuery.of(context).size.height * 0.5,
                         ),

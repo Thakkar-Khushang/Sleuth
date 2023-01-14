@@ -4,22 +4,26 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:sleuth/screens/InstructionsScreen.dart';
 
 class MatchResultsScreen extends StatefulWidget {
-  const MatchResultsScreen({Key? key}) : super(key: key);
+  const MatchResultsScreen(
+      {Key? key, required this.match, this.image, this.criminal, this.uploaded})
+      : super(key: key);
+  final bool match;
+  final String? image;
+  final dynamic criminal;
+  final String? uploaded;
 
   @override
   State<MatchResultsScreen> createState() => _MatchResultsScreenState();
 }
 
 class _MatchResultsScreenState extends State<MatchResultsScreen> {
-  bool success = false;
   Color? color;
   List<Widget> crimes = [];
   @override
   void initState() {
     super.initState();
-    success = true;
-    if (success) {
-      var danger = 75;
+    if (widget.match) {
+      var danger = widget.criminal['dangerLevel'];
       if (danger <= 25) {
         color = Colors.yellow;
       } else if (danger <= 50) {
@@ -35,7 +39,7 @@ class _MatchResultsScreenState extends State<MatchResultsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: success
+      floatingActionButton: widget.match
           ? null
           : SizedBox(
               width: MediaQuery.of(context).size.width * 0.8,
@@ -75,7 +79,7 @@ class _MatchResultsScreenState extends State<MatchResultsScreen> {
               Navigator.pop(context);
             },
           )),
-      body: !success
+      body: !widget.match
           ? const FailedMatchScreen()
           : Container(
               width: MediaQuery.of(context).size.width,
@@ -118,13 +122,14 @@ class _MatchResultsScreenState extends State<MatchResultsScreen> {
                                       lineWidth: 15,
                                       backgroundColor: Colors.grey[800]!,
                                       progressColor: color,
-                                      percent: 75 / 100,
+                                      percent: widget.criminal['dangerLevel'] /
+                                          100,
                                       center: CircleAvatar(
                                         radius:
                                             MediaQuery.of(context).size.width *
                                                 0.265,
-                                        backgroundImage: const AssetImage(
-                                            "assets/myPhoto.jpg"),
+                                        backgroundImage:
+                                            NetworkImage(widget.image!),
                                       ),
                                     ),
                                   ),
@@ -150,15 +155,17 @@ class _MatchResultsScreenState extends State<MatchResultsScreen> {
                                           MediaQuery.of(context).size.width *
                                               0.3,
                                       lineWidth: 15,
-                                      percent: 75 / 100,
+                                      percent: widget.criminal['dangerLevel'] /
+                                          
+                                          100,
                                       backgroundColor: Colors.grey[800]!,
                                       progressColor: color,
                                       center: CircleAvatar(
                                         radius:
                                             MediaQuery.of(context).size.width *
                                                 0.265,
-                                        backgroundImage: const AssetImage(
-                                            "assets/myPhoto.jpg"),
+                                        backgroundImage:
+                                            FileImage(File(widget.uploaded!)),
                                       ),
                                     ),
                                   ),
@@ -176,7 +183,8 @@ class _MatchResultsScreenState extends State<MatchResultsScreen> {
                     ),
                   ),
                   Center(
-                      child: Text("Danger Level: 75%",
+                      child: Text(
+                          "Danger Level: ${widget.criminal['dangerLevel']}%",
                           style: TextStyle(
                               color: color,
                               fontSize: 20,

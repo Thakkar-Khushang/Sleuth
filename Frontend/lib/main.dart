@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sleuth/screens/LandingScreen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
