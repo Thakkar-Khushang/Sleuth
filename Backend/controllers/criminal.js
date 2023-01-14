@@ -122,6 +122,7 @@ const getDangerLevel = (crimes) => {
   };
 
   const findCriminal = async (req, res) => {
+    console.log("finding criminal route called")
     try {
       if (!req.file) {
         console.log("No file received");
@@ -144,7 +145,6 @@ const getDangerLevel = (crimes) => {
   
         const criminals = await getAllCriminals();
 
-        console.log(criminals);
   
         let flag = true;
         for (let i = 0; i < criminals.length; i++) {
@@ -194,16 +194,15 @@ const getDangerLevel = (crimes) => {
   };
 
   const uploadCriminal = async (req, res) => {
+    console.log("uploading criminal route called")
     const { name, dob, address, crimes } = req.body;
     if (!name || !dob || !address || !crimes) {
       return res.status(400).json({
         message: "Please provide all the details",
       });
     }
-    console.log(1);
     const dangerLevel = getDangerLevel(crimes);
     try {
-      console.log(11);
       const uploadSingle = uploadS3.single("file");
       uploadSingle(req, res, async (err) => {
         if (err) {
@@ -214,7 +213,6 @@ const getDangerLevel = (crimes) => {
           });
         } else {
           console.log("Image uploaded successfully");
-          console.log(req.file);
           const criminal = new Criminal({
             name,
             dob,

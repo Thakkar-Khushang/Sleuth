@@ -39,7 +39,7 @@ app.listen(port, async () => {
   await faceapi.nets.faceLandmark68Net.loadFromDisk("weights");
     mongoose.set("strictQuery", false);
     await mongoose
-        .connect(process.env.DB_URI, {
+        .connect(process.env.DBURI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         })
