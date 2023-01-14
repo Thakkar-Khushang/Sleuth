@@ -4,9 +4,10 @@ import 'package:sleuth/screens/MatchResultsScreen.dart';
 
 class PictureConfirmationScreen extends StatefulWidget {
   const PictureConfirmationScreen({
-    Key? key,
+    Key? key, required this.imagePath
   }) : super(key: key);
-
+  final String imagePath;
+  
   @override
   State<PictureConfirmationScreen> createState() =>
       _PictureConfirmationScreenState();

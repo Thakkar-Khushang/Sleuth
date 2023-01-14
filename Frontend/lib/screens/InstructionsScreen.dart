@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:sleuth/components/sleuth_text.dart';
 import 'package:sleuth/screens/PictureConfirmationScreen.dart';
 
@@ -13,6 +14,51 @@ class InstructionsScreen extends StatefulWidget {
 }
 
 class _InstructionsScreenState extends State<InstructionsScreen> {
+  XFile? imageFile;
+
+  Future imageSelector(BuildContext context, String pickerType) async {
+    imageFile = await ImagePicker().pickImage(
+      source: pickerType == 'camera' ? ImageSource.camera : ImageSource.gallery,
+      imageQuality: 25,
+    );
+
+    if (imageFile != null) {
+      print("You selected  image : " + imageFile!.path);
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                PictureConfirmationScreen(imagePath: imageFile!.path)),
+      );
+    } else {
+      print("You have not taken image");
+    }
+  }
+
+  void _settingModalBottomSheet(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return Wrap(
+            children: <Widget>[
+              ListTile(
+                  title: const Text('Gallery'),
+                  onTap: () async {
+                    imageSelector(context, "gallery");
+                    Navigator.pop(context);
+                  }),
+              ListTile(
+                title: const Text('Camera'),
+                onTap: () async {
+                  imageSelector(context, "camera");
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,12 +85,7 @@ class _InstructionsScreenState extends State<InstructionsScreen> {
                 if (value == 0) {
                   // Navigator.pushNamed(context, "/location");
                 } else if (value == 1) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const PictureConfirmationScreen(),
-                    ),
-                  );
+                  _settingModalBottomSheet(context);
                 } else if (value == 2) {
                   const storage = FlutterSecureStorage();
                   String? number = await storage.read(key: "phone_number");
