@@ -52,5 +52,8 @@ const storage = multer.memoryStorage();
 
 router.post('/findCriminal', upload.single("file"), criminalController.findCriminal);
 router.post('/uploadCriminal', uploadS3.single("file"), criminalController.uploadCriminal);
+router.post('/getCriminals', (req, res) => {
+    res.send("Hello");
+});
 
 module.exports = router;
